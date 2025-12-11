@@ -1,0 +1,514 @@
+[
+  {
+    "type": "single",
+    "question": "HTML 中，用于定义表单提交方式的属性是",
+    "options": [
+      "method",
+      "action",
+      "type",
+      "name"
+    ],
+    "answer": "A"
+  },
+  {
+    "type": "single",
+    "question": "SpringMVC 中，用于获取 URL 路径参数的注解是",
+    "options": [
+      "@RequestParam",
+      "@PathVariable",
+      "@RequestParam",
+      "@Param"
+    ],
+    "answer": "B"
+  },
+  {
+    "type": "single",
+    "question": "SpringMVC 中，用于接收前端请求参数的注解是",
+    "options": [
+      "@RequestParam",
+      "@GetMapping",
+      "@ResponseBody",
+      "@Controller"
+    ],
+    "answer": "A"
+  },
+  {
+    "type": "single",
+    "question": "HTTP 请求中，用于向服务器提交表单数据且数据在请求体中的方法是",
+    "options": [
+      "GET",
+      "POST",
+      "PUT",
+      "DELETE"
+    ],
+    "answer": "B"
+  },
+  {
+    "type": "single",
+    "question": "Spring MVC 中处理请求的控制器注解是",
+    "options": [
+      "@Service",
+      "@Controller",
+      "@Repository",
+      "@Component"
+    ],
+    "answer": "B"
+  },
+  {
+    "type": "single",
+    "question": "SpringMVC 中，用于获取 URL 路径参数的注解是",
+    "options": [
+      "@RequestParam",
+      "@PathVariable",
+      "@RequestParam",
+      "@Param"
+    ],
+    "answer": "B"
+  },
+  {
+    "type": "single",
+    "question": "Java 中，线程安全的集合是",
+    "options": [
+      "ArrayList",
+      "HashMap",
+      "ConcurrentHashMap",
+      "HashSet"
+    ],
+    "answer": "C"
+  },
+  {
+    "type": "single",
+    "question": "SSM 框架中，属于 Spring 的核心思想是？",
+    "options": [
+      "面向对象编程",
+      "控制反转（IOC）",
+      "数据访问层封装",
+      "视图解析"
+    ],
+    "answer": "B"
+  },
+  {
+    "type": "single",
+    "question": "MyBatis 中，用于参数传递的注解是？",
+    "options": [
+      "@Param",
+      "@Parameter",
+      "@Args",
+      "@Value"
+    ],
+    "answer": "A"
+  },
+  {
+    "type": "single",
+    "question": "以下关于 Java 基础的描述，错误的是",
+    "options": [
+      "String 类是不可变的",
+      "基本数据类型 int 的默认值是 0",
+      "数组长度用 length () 方法获取",
+      "异常处理中 try 块后需要跟 catch 或 finally"
+    ],
+    "answer": "C"
+  },
+  {
+    "type": "single",
+    "question": "MyBatis 核心配置文件中，用于配置类型别名的标签是",
+    "options": [
+      "<typeAliases>",
+      "<aliases>",
+      "<typeMap>",
+      "<aliasConfig>"
+    ],
+    "answer": "A"
+  },
+  {
+    "type": "single",
+    "question": "@Autowired 注解的作用是",
+    "options": [
+      "AOP 切面",
+      "事务管理",
+      "依赖注入",
+      "数据校验"
+    ],
+    "answer": "C"
+  },
+  {
+    "type": "single",
+    "question": "Java 中，实现接口的关键字是？",
+    "options": [
+      "extends",
+      "implement",
+      "implements",
+      "inherit"
+    ],
+    "answer": "C"
+  },
+  {
+    "type": "single",
+    "question": "MyBatis 中映射文件里用于匹配实体类属性和数据库字段的标签是",
+    "options": [
+      "<resultMap>",
+      "<parameterMap>",
+      "<sql>",
+      "<resultType>"
+    ],
+    "answer": "A"
+  },
+  {
+    "type": "single",
+    "question": "Spring 中，用于声明事务的注解是",
+    "options": [
+      "@Transaction",
+      "@Transactional",
+      "@Trans",
+      "@Tx"
+    ],
+    "answer": "B"
+  },
+  {
+    "type": "single",
+    "question": "MyBatis 中，用于批量插入数据的标签是",
+    "options": [
+      "<insert>",
+      "<batchInsert>",
+      "<insertList>",
+      "<foreach>配合<insert>"
+    ],
+    "answer": "D"
+  },
+  {
+    "type": "single",
+    "question": "以下哪种不是 Spring 依赖注入的方式？",
+    "options": [
+      "构造器注入",
+      "setter 注入",
+      "接口注入",
+      "注解注入"
+    ],
+    "answer": "C"
+  },
+  {
+    "type": "single",
+    "question": "Java 中，下列集合中属于有序且可重复的是",
+    "options": [
+      "HashSet",
+      "TreeSet",
+      "ArrayList",
+      "HashMap"
+    ],
+    "answer": "C"
+  },
+  {
+    "type": "single",
+    "question": "MyBatis 核心配置文件中，用于配置类型别名的标签是",
+    "options": [
+      "<typeAliases>",
+      "<aliases>",
+      "<typeMap>",
+      "<aliasConfig>"
+    ],
+    "answer": "A"
+  },
+  {
+    "type": "single",
+    "question": "SpringMVC 中，用于将请求参数绑定到方法参数上的注解是",
+    "options": [
+      "@RequestParam",
+      "@PathVariable",
+      "@RequestBody",
+      "@ModelAttribute"
+    ],
+    "answer": "A"
+  },
+  {
+    "type": "single",
+    "question": "在 SpringMVC 中，配置视图解析器时，prefix 属性的作用是",
+    "options": [
+      "指定视图文件的后缀名",
+      "指定视图文件的前缀路径",
+      "指定视图的编码格式",
+      "指定视图的渲染引擎"
+    ],
+    "answer": "B"
+  },
+  {
+    "type": "single",
+    "question": "SpringMVC 中，用于接收请求体中的 JSON 数据并转换为 Java 对象的注解是",
+    "options": [
+      "@RequestParam",
+      "@PathVariable",
+      "@RequestBody",
+      "@RequestHeader"
+    ],
+    "answer": "C"
+  },
+  {
+    "type": "single",
+    "question": "以下哪个接口是 SpringMVC 中处理器适配器的核心接口",
+    "options": [
+      "HandlerAdapter",
+      "HandlerMapping",
+      "ViewResolver",
+      "DispatcherServlet"
+    ],
+    "answer": "A"
+  },
+  {
+    "type": "single",
+    "question": "SpringMVC 的核心前端控制器是",
+    "options": [
+      "ContextLoaderListener",
+      "HandlerAdapter",
+      "HandlerMapping",
+      "DispatcherServlet"
+    ],
+    "answer": "D"
+  },
+  {
+    "type": "single",
+    "question": "SpringMVC 中，@ResponseBody 注解的作用是",
+    "options": [
+      "将方法返回值直接写入响应体，不进行视图解析",
+      "将方法返回值作为视图名称进行解析",
+      "将请求参数绑定到方法参数",
+      "将响应体数据绑定到请求域"
+    ],
+    "answer": "A"
+  },
+  {
+    "type": "single",
+    "question": "以下哪个注解用于映射 HTTP POST 请求",
+    "options": [
+      "@GetMapping",
+      "@PutMapping",
+      "@PostMapping",
+      "@DeleteMapping"
+    ],
+    "answer": "C"
+  },
+  {
+    "type": "single",
+    "question": "SpringMVC 中，@CookieValue 注解的作用是",
+    "options": [
+      "获取指定 Cookie 的值并绑定到方法参数",
+      "设置 Cookie 到响应头",
+      "获取请求头中的 Cookie 信息",
+      "绑定 Cookie 到会话域"
+    ],
+    "answer": "A"
+  },
+  {
+    "type": "single",
+    "question": "以下哪个不是 SpringMVC 的核心组件",
+    "options": [
+      "处理器映射器（HandlerMapping）",
+      "处理器适配器（HandlerAdapter）",
+      "ConnectionPool",
+      "视图解析器（ViewResolver）"
+    ],
+    "answer": "C"
+  },
+  {
+    "type": "single",
+    "question": "用于将方法返回值转换为指定格式（如 JSON）的核心依赖是",
+    "options": [
+      "spring-core",
+      "jackson-databind",
+      "mybatis",
+      "log4j"
+    ],
+    "answer": "B"
+  },
+  {
+    "type": "single",
+    "question": "以下关于 @RestController 注解的描述正确的是",
+    "options": [
+      "等价于 @Controller + @ModelAttribute",
+      "仅用于标识控制器类，无其他特殊作用",
+      "等价于 @Controller + @ResponseBody",
+      "用于配置视图解析器"
+    ],
+    "answer": "C"
+  },
+  {
+    "type": "fill",
+    "question": "MySQL 中，创建数据库的关键字是____，删除数据库的关键字是____。",
+    "options": [],
+    "answer": [
+      "CREATE DATABASE",
+      "DROP DATABASE"
+    ]
+  },
+  {
+    "type": "fill",
+    "question": "SpringMVC 中，接收前端 JSON 格式参数的注解是____，指定 GET 请求的注解是____，POST 请求的注解是____。",
+    "options": [],
+    "answer": [
+      "@RequestBody",
+      "@GetMapping",
+      "@PostMapping"
+    ]
+  },
+  {
+    "type": "fill",
+    "question": "HTML 中，引入外部 CSS 文件的标签是____，该标签的 rel 属性值需设置为____。",
+    "options": [],
+    "answer": [
+      "<link>",
+      "stylesheet"
+    ]
+  },
+  {
+    "type": "fill",
+    "question": "SSM框架中，SpringMVC的核心前端控制器是____，它的作用是____所有客户端请求。",
+    "options": [],
+    "answer": [
+      "DispatcherServlet",
+      "拦截/接收"
+    ]
+  },
+  {
+    "type": "fill",
+    "question": "SpringMVC 中，@RequestMapping 注解可指定请求的____和____，返回 JSON 数据需添加注解____。",
+    "options": [],
+    "answer": [
+      "请求方式（method）",
+      "请求方式（method）",
+      "@ResponseBody"
+    ]
+  },
+  {
+    "type": "fill",
+    "question": "Spring 中，依赖注入的两种主要方式是____注入和____注入。",
+    "options": [],
+    "answer": [
+      "构造器",
+      "setter"
+    ]
+  },
+  {
+    "type": "fill",
+    "question": "MyBatis 中，映射文件的____属性用于指定接口的全限定名，____标签用于配置结果集映射。",
+    "options": [],
+    "answer": [
+      "namespace",
+      "<resultMap>"
+    ]
+  },
+  {
+    "type": "fill",
+    "question": "Java 中，处理异常的关键字有 try、catch 和____，手动抛出异常的关键字是____。",
+    "options": [],
+    "answer": [
+      "finally",
+      "throw"
+    ]
+  },
+  {
+    "type": "fill",
+    "question": "JavaScript 中，阻止事件默认行为的方法是____，页面加载完成后执行函数的方法是____（写一种即可）。",
+    "options": [],
+    "answer": [
+      "event.preventDefault()",
+      "window.onload = 函数名（或 $(function (){})）"
+    ]
+  },
+  {
+    "type": "fill",
+    "question": "SSM 框架分别指 Spring、SpringMVC 和____，其中负责数据持久化的是____。",
+    "options": [],
+    "answer": [
+      "MyBatis",
+      "MyBatis"
+    ]
+  },
+  {
+    "type": "fill",
+    "question": "Java 中，System.out.println () 用于输出内容到____，Scanner 类主要用于____输入。",
+    "options": [],
+    "answer": [
+      "控制台",
+      "接收用户键盘"
+    ]
+  },
+  {
+    "type": "fill",
+    "question": "HTML 中，表单元素<input>的类型为密码框时，type 属性值是____，提交按钮的 type 值是____。",
+    "options": [],
+    "answer": [
+      "password",
+      "submit"
+    ]
+  },
+  {
+    "type": "fill",
+    "question": "MySQL 中，执行插入数据的 SQL 语句关键字是____，执行更新数据的关键字是____。",
+    "options": [],
+    "answer": [
+      "INSERT INTO",
+      "UPDATE"
+    ]
+  },
+  {
+    "type": "fill",
+    "question": "MyBatis 中，实现分页查询常用的插件是____，映射文件中插入语句的标签是____。",
+    "options": [],
+    "answer": [
+      "PageHelper",
+      "<insert>"
+    ]
+  },
+  {
+    "type": "fill",
+    "question": "JavaScript 中，获取 ID 为 \"user\" 的 DOM 元素的方法是____，给元素绑定点击事件的方法是____（写出一种即可）。",
+    "options": [],
+    "answer": [
+      "document.getElementById(\"user\")",
+      "元素.onclick = 函数名"
+    ]
+  },
+  {
+    "type": "fill",
+    "question": "Spring 中，将类标识为业务层 Bean 的注解是____，标识为数据访问层 Bean 的注解是____。",
+    "options": [],
+    "answer": [
+      "@Service",
+      "@Repository"
+    ]
+  },
+  {
+    "type": "fill",
+    "question": "MyBatis 的核心配置文件默认名称是____，映射文件中定义查询语句的标签是____。",
+    "options": [],
+    "answer": [
+      "mybatis-config.xml",
+      "<select>"
+    ]
+  },
+  {
+    "type": "fill",
+    "question": "Java 中，实现多线程的两种方式分别是继承____类和实现____接口。",
+    "options": [],
+    "answer": [
+      "Thread",
+      "Runnable"
+    ]
+  },
+  {
+    "type": "fill",
+    "question": "MySQL 中，查询时用于排序的关键字是____，升序排序的关键字是____。",
+    "options": [],
+    "answer": [
+      "ORDER BY",
+      "ASC"
+    ]
+  },
+  {
+    "type": "fill",
+    "question": "Java 中，处理异常的关键字有 try、catch 和____，手动抛出异常的关键字是____。",
+    "options": [],
+    "answer": [
+      "finally",
+      "throw"
+    ]
+  }
+]

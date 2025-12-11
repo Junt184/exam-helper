@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>期末速通工具 2.0 🚀</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .option-btn { transition: all 0.2s; }
+        .option-btn:hover { transform: translateY(-1px); }
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen text-gray-800 font-sans">
+
+    <!-- App Container -->
+    <div id="app" class="container mx-auto px-4 py-8 max-w-4xl">
+        <!-- Content will be injected here by JS -->
+    </div>
+
+    <script>
+        // --- State Management ---
+        const state = {
+            view: 'login', // login, dashboard, create, quiz
+            user: null,
+            quizzes: [],
+            currentQuiz: null
+        };
+
+        // --- API Client ---
+        const API = {
+            login: async (username, password) => {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({username, password})
+                });
+                if (!res.ok) throw new Error((await res.json()).detail);
+                return await res.json();
+            },
+            listQuizzes: async () => {
+                const res = await fetch('/api/quizzes');
+                return await res.json();
+            },
+            createQuiz: async (name, content) => {
+                const res = await fetch('/api/quizzes', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({name, content})
+                });
+                if (!res.ok) throw new Error((await res.json()).detail);
+                return await res.json();
+            },
+            getQuiz: async (name) => {
+                const res = await fetch(`/api/quizzes/${name}`);
+                if (!res.ok) throw new Error((await res.json()).detail);
+                return await res.json();
+            }
+        };
+
+        // --- View Rendering ---
+        function renderApp() {
+            const app = document.getElementById('app');
+            app.innerHTML = ''; // Clear
+
+            if (state.view === 'login') {
+                renderLogin(app);
+            } else if (state.view === 'dashboard') {
+                renderDashboard(app);
+            } else if (state.view === 'create') {
+                renderCreate(app);
+            } else if (state.view === 'quiz') {
+                renderQuizView(app);
+            }
+        }
+
+        function renderLogin(container) {
+            container.innerHTML = `
+                <div class="max-w-md mx-auto bg-white p-8 rounded-xl shadow-lg mt-20 fade-in">
+                    <h1 class="text-3xl font-bold text-center text-indigo-600 mb-8">欢迎回来! 👋</h1>
+                    <form onsubmit="handleLogin(event)" class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">用户名</label>
+                            <input type="text" id="username" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="student" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">密码</label>
+                            <input type="password" id="password" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="123123" required>
+                        </div>
+                        <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-3 rounded-lg hover:bg-indigo-700 transition-colors">
+                            登录
+                        </button>
+                    </form>
+                </div>
+            `;
+        }
+
+        function renderDashboard(container) {
+            const quizListHtml = state.quizzes.length === 0 
+                ? '<div class="text-center text-gray-400 py-10">还没有题库，快去录入吧! 📝</div>'
+                : state.quizzes.map(q => `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-shadow flex justify-between items-center">
+                        <span class="font-medium text-lg text-gray-800">${q.name}</span>
+                        <button onclick="startQuiz('${q.id}')" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors font-medium">
+                            开始刷题 🚀
+                        </button>
+                    </div>
+                `).join('');
+
+            container.innerHTML = `
+                <div class="fade-in">
+                    <header class="flex justify-between items-center mb-8">
+                        <h1 class="text-2xl font-bold text-gray-800">我的题库 📚</h1>
+                        <button onclick="logout()" class="text-gray-500 hover:text-red-500">退出登录</button>
+                    </header>
+
+                    <div class="grid grid-cols-1 gap-6 mb-8">
+                        ${quizListHtml}
+                    </div>
+
+                    <div class="text-center">
+                        <button onclick="switchView('create')" class="bg-indigo-600 text-white px-8 py-3 rounded-xl hover:bg-indigo-700 transition-colors shadow-lg font-bold flex items-center mx-auto">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                            录入新题目
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderCreate(container) {
+            container.innerHTML = `
+                <div class="fade-in">
+                    <header class="flex items-center mb-6">
+                        <button onclick="switchView('dashboard')" class="mr-4 text-gray-500 hover:text-gray-800">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                        </button>
+                        <h1 class="text-2xl font-bold text-gray-800">录入题目 ✍️</h1>
+                    </header>
+
+                    <div class="bg-white p-6 rounded-xl shadow-lg">
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">题目名称 (例如: 2023期末复习)</label>
+                            <input type="text" id="quiz-name" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="输入名称...">
+                        </div>
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">题目内容 (直接粘贴文本)</label>
+                            <textarea id="quiz-content" class="w-full h-64 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none resize-none font-mono text-sm" placeholder="粘贴题目内容..."></textarea>
+                        </div>
+                        <button onclick="handleCreateQuiz(this)" class="w-full bg-indigo-600 text-white font-bold py-3 rounded-lg hover:bg-indigo-700 transition-colors">
+                            AI 解析并保存 ✨
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderQuizView(container) {
+            if (!state.currentQuiz) return;
+            
+            // Generate quiz HTML using existing logic logic (modified for string return)
+            const quizHtml = generateQuizHtml(state.currentQuiz);
+            
+            container.innerHTML = `
+                <div class="fade-in">
+                    <header class="flex items-center justify-between mb-6 sticky top-0 bg-gray-50 py-4 z-10">
+                        <div class="flex items-center">
+                            <button onclick="switchView('dashboard')" class="mr-4 text-gray-500 hover:text-gray-800">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                            </button>
+                            <h1 class="text-xl font-bold text-gray-800 truncate max-w-xs">${state.currentQuizName || '刷题'}</h1>
+                        </div>
+                        <span class="text-sm text-gray-500">共 ${state.currentQuiz.length} 题</span>
+                    </header>
+                    
+                    <div class="space-y-8 pb-20">
+                        ${quizHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Logic Handlers ---
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            const u = document.getElementById('username').value;
+            const p = document.getElementById('password').value;
+            try {
+                await API.login(u, p);
+                state.user = u;
+                await refreshQuizzes();
+                switchView('dashboard');
+            } catch (err) {
+                alert(err.message);
+            }
+        }
+
+        function logout() {
+            state.user = null;
+            switchView('login');
+        }
+
+        async function refreshQuizzes() {
+            try {
+                state.quizzes = await API.listQuizzes();
+            } catch (e) {
+                console.error("Failed to list quizzes", e);
+            }
+        }
+
+        function switchView(view) {
+            state.view = view;
+            renderApp();
+        }
+
+        async function handleCreateQuiz(btn) {
+            const name = document.getElementById('quiz-name').value.trim();
+            const content = document.getElementById('quiz-content').value.trim();
+            
+            if (!name || !content) {
+                alert("请填写完整信息! 😠");
+                return;
+            }
+
+            const originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = `⏳ 处理中...`;
+
+            try {
+                const res = await API.createQuiz(name, content);
+                alert(`成功录入 ${res.count} 道题目! 🎉`);
+                await refreshQuizzes();
+                switchView('dashboard');
+            } catch (err) {
+                alert(`出错啦: ${err.message} 😭`);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
+        }
+
+        async function startQuiz(id) {
+            try {
+                const data = await API.getQuiz(id);
+                state.currentQuiz = data;
+                state.currentQuizName = id; // id is filename/name
+                switchView('quiz');
+            } catch (err) {
+                alert(`无法加载题目: ${err.message}`);
+            }
+        }
+
+        // --- Helper Functions (Reused & Adapted) ---
+
+        function escapeHtml(text) {
+            if (!text) return text;
+            if (typeof text !== 'string') return JSON.stringify(text);
+            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+
+        function generateQuizHtml(questions) {
+            return questions.map((q, index) => {
+                const qType = q.type || 'single';
+                const questionText = escapeHtml(q.question);
+                const correctAnswer = q.answer; 
+                const options = q.options || [];
+                
+                let typeLabel = '';
+                if (qType === 'single') typeLabel = '<span class="bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded ml-2">单选题</span>';
+                else if (qType === 'multiple') typeLabel = '<span class="bg-purple-100 text-purple-600 text-xs px-2 py-1 rounded ml-2">多选题</span>';
+                else if (qType === 'fill') typeLabel = '<span class="bg-orange-100 text-orange-600 text-xs px-2 py-1 rounded ml-2">填空题</span>';
+
+                let contentHtml = '';
+
+                if (qType === 'single') {
+                    options.forEach((opt, i) => {
+                        const letter = String.fromCharCode(65 + i);
+                        const safeOpt = escapeHtml(opt);
+                        contentHtml += `
+                            <button onclick="checkSingleAnswer(this, '${letter}', '${correctAnswer}')" 
+                                class="option-btn w-full text-left p-4 rounded-lg border border-gray-200 hover:border-indigo-300 hover:bg-indigo-50 mb-2 flex items-start group">
+                                <span class="font-bold text-gray-500 w-8 flex-shrink-0 group-hover:text-indigo-600">${letter}.</span>
+                                <span class="text-gray-700">${safeOpt}</span>
+                            </button>
+                        `;
+                    });
+                } else if (qType === 'multiple') {
+                    contentHtml += `<div class="multi-select-group" data-answer='${JSON.stringify(correctAnswer)}'>`;
+                    options.forEach((opt, i) => {
+                        const letter = String.fromCharCode(65 + i);
+                        const safeOpt = escapeHtml(opt);
+                        contentHtml += `
+                            <button onclick="toggleMultiSelect(this, '${letter}')" 
+                                class="option-btn w-full text-left p-4 rounded-lg border border-gray-200 hover:border-indigo-300 hover:bg-indigo-50 mb-2 flex items-start group" data-val="${letter}">
+                                <div class="w-6 h-6 border-2 border-gray-300 rounded mr-3 flex items-center justify-center text-white check-box">
+                                    <svg class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                                </div>
+                                <span class="text-gray-700">${safeOpt}</span>
+                            </button>
+                        `;
+                    });
+                    contentHtml += `<button onclick="checkMultiAnswer(this)" class="mt-2 bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors text-sm font-bold">提交答案</button></div>`;
+                } else if (qType === 'fill') {
+                    let answers = Array.isArray(correctAnswer) ? correctAnswer : [correctAnswer];
+                    contentHtml += `<div class="fill-blank-group" data-answers='${escapeHtml(JSON.stringify(answers))}'>`;
+                    answers.forEach((ans, i) => {
+                        contentHtml += `
+                            <div class="mb-3">
+                                <span class="text-sm text-gray-500 mb-1 block">第 ${i+1} 空:</span>
+                                <input type="text" placeholder="请输入答案..." class="fill-input w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" data-index="${i}">
+                            </div>
+                        `;
+                    });
+                    contentHtml += `<button onclick="checkFillAnswer(this)" class="mt-2 bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors text-sm font-bold">提交答案</button>
+                    <div class="mt-3 text-sm hidden result-msg space-y-1"></div></div>`;
+                }
+
+                return `
+                    <div class="bg-white p-6 rounded-xl shadow-lg">
+                        <div class="mb-4">
+                            <span class="inline-block bg-gray-100 text-gray-500 text-xs px-2 py-1 rounded mb-2">第 ${index + 1} 题</span>
+                            ${typeLabel}
+                            <h3 class="text-lg font-medium text-gray-900 leading-relaxed mt-1">${questionText}</h3>
+                        </div>
+                        <div class="space-y-2">${contentHtml}</div>
+                        <div class="mt-4 flex justify-end">
+                            <button onclick="toggleAnswer(this, '${escapeHtml(JSON.stringify(correctAnswer))}')" class="text-xs text-indigo-400 hover:text-indigo-600 underline">偷看答案 🙈</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Global Quiz Interaction Functions (exposed to window)
+        window.checkSingleAnswer = function(btn, selected, correct) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('button');
+            buttons.forEach(b => b.disabled = true);
+            if (selected === correct) {
+                btn.classList.remove('border-gray-200', 'hover:border-indigo-300', 'hover:bg-indigo-50');
+                btn.classList.add('bg-green-100', 'border-green-500', 'text-green-800');
+            } else {
+                btn.classList.remove('border-gray-200', 'hover:border-indigo-300', 'hover:bg-indigo-50');
+                btn.classList.add('bg-red-100', 'border-red-500', 'text-red-800');
+                buttons.forEach(b => {
+                    if (b.onclick && b.onclick.toString().includes(`'${correct}'`)) {
+                         b.classList.add('bg-green-50', 'border-green-300', 'text-green-700');
+                    }
+                });
+            }
+        };
+
+        window.toggleMultiSelect = function(btn, val) {
+            btn.classList.toggle('selected');
+            const checkBox = btn.querySelector('.check-box');
+            const checkIcon = checkBox.querySelector('svg');
+            if (btn.classList.contains('selected')) {
+                btn.classList.add('bg-indigo-50', 'border-indigo-300');
+                checkBox.classList.add('bg-indigo-600', 'border-indigo-600');
+                checkBox.classList.remove('border-gray-300');
+                checkIcon.classList.remove('hidden');
+            } else {
+                btn.classList.remove('bg-indigo-50', 'border-indigo-300');
+                checkBox.classList.remove('bg-indigo-600', 'border-indigo-600');
+                checkBox.classList.add('border-gray-300');
+                checkIcon.classList.add('hidden');
+            }
+        };
+
+        window.checkMultiAnswer = function(submitBtn) {
+            const group = submitBtn.parentElement;
+            const correctRaw = JSON.parse(group.dataset.answer);
+            const options = group.querySelectorAll('.option-btn');
+            const selectedVals = [];
+            options.forEach(btn => {
+                if (btn.classList.contains('selected')) selectedVals.push(btn.dataset.val);
+                btn.onclick = null;
+                btn.classList.add('cursor-default');
+            });
+            submitBtn.disabled = true;
+            submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            const isCorrect = JSON.stringify(selectedVals.sort()) === JSON.stringify(correctRaw.sort());
+            
+            options.forEach(btn => {
+                const val = btn.dataset.val;
+                const isSelected = btn.classList.contains('selected');
+                const isAnswer = correctRaw.includes(val);
+                btn.classList.remove('hover:border-indigo-300', 'hover:bg-indigo-50', 'bg-indigo-50', 'border-indigo-300');
+                if (isAnswer) {
+                    btn.classList.add('bg-green-50', 'border-green-500');
+                    if (isSelected) btn.querySelector('.check-box').classList.add('bg-green-500', 'border-green-500');
+                    else btn.classList.add('border-dashed');
+                } else if (isSelected) {
+                    btn.classList.add('bg-red-50', 'border-red-500');
+                    btn.querySelector('.check-box').classList.add('bg-red-500', 'border-red-500');
+                }
+            });
+
+            if (isCorrect) {
+                submitBtn.textContent = "回答正确 🎉";
+                submitBtn.classList.replace('bg-indigo-600', 'bg-green-600');
+            } else {
+                submitBtn.textContent = "回答错误 😅";
+                submitBtn.classList.replace('bg-indigo-600', 'bg-red-600');
+            }
+        };
+
+        window.checkFillAnswer = function(submitBtn) {
+            const group = submitBtn.parentElement;
+            const correctAnswers = JSON.parse(group.dataset.answers);
+            const inputs = group.querySelectorAll('.fill-input');
+            const resultMsg = group.querySelector('.result-msg');
+            let allCorrect = true;
+            inputs.forEach((input, index) => {
+                const userVal = input.value.trim();
+                const correctVal = correctAnswers[index];
+                input.disabled = true;
+                if (userVal === correctVal) input.classList.add('border-green-500', 'bg-green-50', 'text-green-800');
+                else {
+                    allCorrect = false;
+                    input.classList.add('border-red-500', 'bg-red-50', 'text-red-800');
+                }
+            });
+            submitBtn.disabled = true;
+            submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            resultMsg.classList.remove('hidden');
+            if (allCorrect) {
+                 resultMsg.innerHTML = '<div class="text-green-600 font-bold">全部回答正确! 🎉</div>';
+                 submitBtn.classList.replace('bg-indigo-600', 'bg-green-600');
+                 submitBtn.textContent = "回答正确 🎉";
+            } else {
+                let feedback = '<div class="text-red-600 font-bold mb-2">部分或全部回答错误 😅</div>';
+                correctAnswers.forEach((ans, i) => {
+                     feedback += `<div class="text-gray-600">第 ${i+1} 空答案: <span class="font-bold text-indigo-600">${ans}</span></div>`;
+                });
+                resultMsg.innerHTML = feedback;
+                submitBtn.classList.replace('bg-indigo-600', 'bg-red-600');
+                submitBtn.textContent = "回答错误 😅";
+            }
+        };
+
+        window.toggleAnswer = function(btn, answer) {
+            if (btn.innerText.includes('偷看')) {
+                btn.innerText = `答案是: ${answer} 👀`;
+                btn.classList.add('font-bold');
+            } else {
+                btn.innerText = '偷看答案 🙈';
+                btn.classList.remove('font-bold');
+            }
+        };
+
+        // Initialize
+        renderApp();
+    </script>
+</body>
+</html>
