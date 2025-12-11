@@ -2,7 +2,7 @@ import os
 import json
 import logging
 from datetime import datetime
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
@@ -83,7 +83,7 @@ except Exception as e:
     logger.error(f"Error loading prompts.json: {e}")
     SYSTEM_PROMPT = "你是一个助手。" # Fallback
 
-def process_text_with_llm(text: str):
+def process_text_with_llm(text: str, client_ip: str = "unknown"):
     """
     Helper: 调用 LLM 并清洗数据
     """
@@ -104,12 +104,20 @@ def process_text_with_llm(text: str):
     )
     
     # 保存原始响应 JSON
+    os.makedirs(HISTORY_DIR, exist_ok=True)
     result_json = response.model_dump()
+    
+    # 注入请求者 IP
+    result_json["_meta"] = {
+        "client_ip": client_ip,
+        "timestamp": datetime.now().isoformat()
+    }
+    
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     filename = f"{HISTORY_DIR}/response_{timestamp}.json"
     with open(filename, "w", encoding="utf-8") as f:
         json.dump(result_json, f, ensure_ascii=False, indent=2)
-    logger.info(f"DeepSeek response saved to {filename} 💾")
+    logger.info(f"DeepSeek response saved to {filename} (IP: {client_ip}) 💾")
     
     # 获取 AI 返回的原始内容
     content = response.choices[0].message.content
@@ -179,15 +187,19 @@ def list_quizzes():
     return quizzes
 
 @app.post("/api/quizzes")
-def create_quiz(request: QuizCreateRequest):
+def create_quiz(request: QuizCreateRequest, req: Request):
     try:
+        # 获取客户端 IP
+        client_ip = req.client.host if req.client else "unknown"
+        
         # 1. 调用 LLM 解析题目
-        questions = process_text_with_llm(request.content)
+        questions = process_text_with_llm(request.content, client_ip)
         
         if not questions:
              raise HTTPException(status_code=400, detail="未能解析出任何题目，请检查输入格式 🥺")
 
         # 2. 保存到文件
+        os.makedirs("quizzes", exist_ok=True)
         filename = f"quizzes/{request.name}.json"
         with open(filename, "w", encoding="utf-8") as f:
             json.dump(questions, f, ensure_ascii=False, indent=2)
