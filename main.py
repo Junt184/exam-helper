@@ -152,6 +152,10 @@ def process_text_with_llm(text: str, client_ip: str = "unknown"):
             elif isinstance(parsed_item, dict):
                 # 简单校验必要字段
                 if "type" in parsed_item and "question" in parsed_item and "answer" in parsed_item:
+                    # 补全判断题选项
+                    if parsed_item["type"] == "judgment" and not parsed_item.get("options"):
+                        parsed_item["options"] = ["正确", "错误"]
+                    
                     cleaned_data.append(parsed_item)
                 else:
                     logger.warning(f"Skipping dict missing fields: {line}")
