@@ -23,7 +23,7 @@
 
 ### 1. 克隆项目
 ```bash
-git clone https://github.com/你的用户名/exam-helper.git
+git clone https://github.com/Junt184/exam-helper.git
 cd exam-helper
 ```
 
@@ -53,7 +53,7 @@ python main.py
 ### 5. 登录
 *   用户名: `student`
 *   密码: `123123`
-
+账户密码在代码中硬编码了，想改自己在main.py里面改一下就行
 ---
 
 ## ⚠️ License / 许可说明
