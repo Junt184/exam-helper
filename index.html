@@ -271,6 +271,7 @@
                 if (qType === 'single') typeLabel = '<span class="bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded ml-2">单选题</span>';
                 else if (qType === 'multiple') typeLabel = '<span class="bg-purple-100 text-purple-600 text-xs px-2 py-1 rounded ml-2">多选题</span>';
                 else if (qType === 'fill') typeLabel = '<span class="bg-orange-100 text-orange-600 text-xs px-2 py-1 rounded ml-2">填空题</span>';
+                else if (qType === 'judgment') typeLabel = '<span class="bg-green-100 text-green-600 text-xs px-2 py-1 rounded ml-2">判断题</span>';
 
                 let contentHtml = '';
 
@@ -283,6 +284,17 @@
                                 class="option-btn w-full text-left p-4 rounded-lg border border-gray-200 hover:border-indigo-300 hover:bg-indigo-50 mb-2 flex items-start group">
                                 <span class="font-bold text-gray-500 w-8 flex-shrink-0 group-hover:text-indigo-600">${letter}.</span>
                                 <span class="text-gray-700">${safeOpt}</span>
+                            </button>
+                        `;
+                    });
+                } else if (qType === 'judgment') {
+                    options.forEach((opt, i) => {
+                        const safeOpt = escapeHtml(opt);
+                        // For judgment, use the option text itself as the key (e.g. "正确")
+                        contentHtml += `
+                            <button onclick="checkSingleAnswer(this, '${safeOpt}', '${correctAnswer}')" 
+                                class="option-btn w-full text-left p-4 rounded-lg border border-gray-200 hover:border-indigo-300 hover:bg-indigo-50 mb-2 flex items-start group">
+                                <span class="text-gray-700 font-bold">${safeOpt}</span>
                             </button>
                         `;
                     });

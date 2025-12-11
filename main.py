@@ -71,7 +71,12 @@ PROMPTS_FILE = "prompts.json"
 try:
     with open(PROMPTS_FILE, "r", encoding="utf-8") as f:
         prompts_data = json.load(f)
-        SYSTEM_PROMPT = prompts_data.get("system_prompt", "")
+        raw_prompt = prompts_data.get("system_prompt", "")
+        if isinstance(raw_prompt, list):
+            SYSTEM_PROMPT = "\n".join(raw_prompt)
+        else:
+            SYSTEM_PROMPT = raw_prompt
+            
         if not SYSTEM_PROMPT:
             logger.warning(f"Warning: 'system_prompt' is empty in {PROMPTS_FILE}")
 except Exception as e:
