@@ -510,16 +510,27 @@
             const inputs = group.querySelectorAll('.fill-input');
             const resultMsg = group.querySelector('.result-msg');
             let allCorrect = true;
-            inputs.forEach((input, index) => {
+            
+            inputs.forEach((input, i) => {
                 const userVal = input.value.trim();
-                const correctVal = correctAnswers[index];
+                const correctVal = correctAnswers[i];
                 input.disabled = true;
-                if (userVal === correctVal) input.classList.add('border-green-500', 'bg-green-50', 'text-green-800');
-                else {
+                
+                if (userVal === correctVal) {
+                    input.classList.add('border-green-500', 'bg-green-50', 'text-green-800');
+                } else if (userVal.toLowerCase() === correctVal.toLowerCase()) {
+                    // Case insensitive match
+                    input.classList.add('border-green-500', 'bg-green-50', 'text-green-800');
+                    const warning = document.createElement('div');
+                    warning.className = 'text-xs text-orange-500 mt-1 font-bold fade-in';
+                    warning.innerHTML = '⚠️ 记得注意大小写';
+                    input.parentElement.appendChild(warning);
+                } else {
                     allCorrect = false;
                     input.classList.add('border-red-500', 'bg-red-50', 'text-red-800');
                 }
             });
+            
             submitBtn.disabled = true;
             submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
             resultMsg.classList.remove('hidden');
