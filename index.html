@@ -162,6 +162,14 @@
         function renderQuizView(container) {
             if (!state.currentQuiz) return;
             
+            // Sort questions by type: Single -> Multiple -> Judgment -> Fill
+            const typeOrder = { 'single': 1, 'multiple': 2, 'judgment': 3, 'fill': 4 };
+            state.currentQuiz.sort((a, b) => {
+                const typeA = a.type || 'single';
+                const typeB = b.type || 'single';
+                return (typeOrder[typeA] || 99) - (typeOrder[typeB] || 99);
+            });
+
             // Initialize Score Tracking
             quizStats = { total: state.currentQuiz.length, correct: 0, incorrect: 0, answered: new Set() };
             renderScoreBoard();
